@@ -1,0 +1,6 @@
+00000001 element1 1
+00000003 element2 5
+00000000 element3 1
+00000002 element4 2
+00000000 element3 1
+00000001 element1 1
