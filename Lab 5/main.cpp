@@ -9,7 +9,7 @@ using namespace std;
 
 typedef struct elem
 {
-    char key[9];
+    char id[9];
     char name[20];
     int amount;
     int price;
@@ -26,7 +26,7 @@ bool inserttable (table * G, element * x)
     int i = G->n - 1;
     if (G->n < N)
     {
-        while (i >= 0 && atoi(G->el[i]->key) > atoi(x->key))
+        while (i >= 0 && atoi(G->el[i]->id) > atoi(x->id))
         {
             G->el[i+1] = G->el[i];
             i--;
@@ -39,12 +39,12 @@ bool inserttable (table * G, element * x)
         return false;
 }
 
-int linear_search(table * G, element * x)
+int linear_search(table * G, int x)
 {
     int i = 0;
-    while (i < G->n && atoi(G->el[i]->key) <= atoi(x->key))
+    while (i < G->n && atoi(G->el[i]->id) <= x)
     {
-        if (atoi(G->el[i]->key) == atoi(x->key))
+        if (atoi(G->el[i]->id) == x)
             return i;
         i++;
     }
@@ -64,11 +64,11 @@ int main()
 
     table * t = new table;
     t->n = 0;
-    while(!fin.eof())
+    while(!items.eof())
     {
         element * x = new element;
-        fin >> x->key >> x->name >> x->amount;
-        int index_in_table = linear_search(t, x);
+        items >> x->id >> x->name >> x->amount;
+        int index_in_table = linear_search(t, atoi(x->id));
         if (index_in_table != -1)
             t->el[index_in_table]->amount += x->amount;
         else
@@ -84,8 +84,17 @@ int main()
         }
     }
 
+    while(!prices.eof())
+    {
+        char key[9];
+        int price;
+        prices >> key >> price;
+        int index_in_table = linear_search(t, atoi(key));
+        t->el[index_in_table]->price = price;
+    }
+
     for (int i = 0; i < t->n; i++)
-        cout << t->el[i]->key << " " << t->el[i]->name << " " << t->el[i]->amount << endl;
+        cout << t->el[i]->id << " " << t->el[i]->name << " " << t->el[i]->amount << " " << t->el[i]->price << endl;
 
 
     return 0;

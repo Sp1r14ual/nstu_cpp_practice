@@ -1,21 +1,22 @@
 #include <iostream>
 #include <cstdlib>
+#include "main.cpp"
 using namespace std;
 
-struct tnode
+typedef struct tnode
 {
   int field;           
   struct tnode *left;
   struct tnode *right;
-};
+} tnode;
 
-void treeprint(tnode *tree)
+void inorder(tnode * tree)
 {
   if (tree != NULL) 
   {
-    treeprint(tree->left); 
+    inorder(tree->left); 
     cout << tree->field << " ";
-    treeprint(tree->right);
+    inorder(tree->right);
   }
 }
 
@@ -45,7 +46,17 @@ void freemem(tnode *tree)
   }
 }
 
-void sort()
+table * sort(table * t)
 {
+  tnode * root = 0;
+  int a;
+  for (int i = 0; i < t->n; i++) 
+    root = addnode(t->el[i]->price, root);
+  inorder(root);
+
+  table * t_new = new table;
 
 }
+
+
+//draft
