@@ -1,10 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "stack.c"
+#include <iostream>
+#include <cstdlib>
+#include <cstddef>
+#include "stack.cpp"
 
 int main()
 {
-    stack * s = init();
+    stack *s = init();
     int i;
     for (i = 5; i < 10; ++i)
         push(s, i);
