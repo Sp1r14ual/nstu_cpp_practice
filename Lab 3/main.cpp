@@ -2,16 +2,43 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstddef>
-#include "tree.cpp"
 
 using namespace std;
-
-int path_length(tnode *tree, int value)
+typedef struct tnode
 {
-  if (!tree || tree->field == value)
-    return 0;
+  int elem;
+  struct tnode *left;
+  struct tnode *right;
+} tnode;
+
+struct tnode *addnode(int x, tnode *tree)
+{
+  if (tree == NULL)
+  {
+    tree = new tnode;
+    tree->elem = x;
+    tree->left = NULL;
+    tree->right = NULL;
+  }
+  else if (x < tree->elem)
+    tree->left = addnode(x, tree->left);
   else
-    return 1 + path_length(((tree->field > value) ? tree->left : tree->right), value);
+    tree->right = addnode(x, tree->right);
+  return (tree);
+}
+
+void path_length(tnode *tree, int num, int acc, int &length)
+{
+  if (tree == nullptr)
+    return;
+
+  if (num == tree->elem)
+  {
+    length = acc;
+    return;
+  }
+  path_length(tree->left, num, acc + 1, length);
+  path_length(tree->right, num, acc + 1, length);
 }
 
 int main()
@@ -19,12 +46,13 @@ int main()
   ifstream fin;
   fin.open("input.txt");
 
-  tnode *root = NULL;
   int value;
-  int search_value;
 
+  tnode *root = new tnode;
   fin >> value;
-  root = addnode(value, root);
+  root->elem = value;
+  root->left = NULL;
+  root->right = NULL;
 
   while (!fin.eof())
   {
@@ -32,12 +60,16 @@ int main()
     addnode(value, root);
   }
 
-  treeprint_inorder(root);
-  cout << endl;
+  int x, length = -1;
+  cout << "Введите искомое число: ";
+  cin >> x;
 
-  cout << "Введите значение" << endl;
-  cin >> search_value;
-  cout << path_length(root, search_value) << endl;
+  path_length(root, x, 0, length);
+
+  if (length == -1)
+    cout << "No such element" << endl;
+  else
+    cout << length << endl;
 
   return 0;
 }
