@@ -72,69 +72,43 @@ int linear_search_for_price(table *G, int x)
     return -1;
 }
 
-typedef struct tnode
+void siftDown(table *t, int root, int bottom)
 {
-    int field;
-    struct tnode *left;
-    struct tnode *right;
-} tnode;
+    int maxChild;
+    bool done = false;
 
-void inorder(tnode *tree, table *t_old, table *t_new)
-{
-
-    if (tree != NULL)
+    while ((root * 2 <= bottom) && (!done))
     {
-        inorder(tree->left, t_old, t_new);
-        int index_in_table = linear_search_for_price(t_old, tree->field);
-        bool inserted = unordered_insert(t_new, t_old->el[index_in_table]);
-        if (!inserted)
+        if (root * 2 == bottom)
+            maxChild = root * 2;
+        else if (t->el[root * 2]->price > t->el[root * 2 + 1]->price)
+            maxChild = root * 2;
+        else
+            maxChild = root * 2 + 1;
+
+        if (t->el[root]->price < t->el[maxChild]->price)
         {
-            cout << "Error. Table is full." << endl;
-            exit(1);
+            element *temp = t->el[root];
+            t->el[root] = t->el[maxChild];
+            t->el[maxChild] = temp;
+            root = maxChild;
         }
-        inorder(tree->right, t_old, t_new);
+        else
+            done = true;
     }
 }
 
-struct tnode *addnode(int x, tnode *tree)
+void heapSort(table *t, int array_size)
 {
-    if (tree == NULL)
+
+    for (int i = (array_size / 2); i >= 0; i--)
+        siftDown(t, i, array_size - 1);
+
+    for (int i = array_size - 1; i >= 1; i--)
     {
-        tree = new tnode;
-        tree->field = x;
-        tree->left = NULL;
-        tree->right = NULL;
+        element *temp = t->el[0];
+        t->el[0] = t->el[i];
+        t->el[i] = temp;
+        siftDown(t, 0, i - 1);
     }
-    else if (x < tree->field)
-        tree->left = addnode(x, tree->left);
-    else
-        tree->right = addnode(x, tree->right);
-    return (tree);
-}
-
-void free_tree(tnode *tree)
-{
-    if (tree != NULL)
-    {
-        free_tree(tree->left);
-        free_tree(tree->right);
-        delete tree;
-    }
-}
-
-table *sort_table(table *t_old)
-{
-    tnode *root = 0;
-    int a;
-    for (int i = 0; i < t_old->n; i++)
-        root = addnode(t_old->el[i]->price, root);
-
-    table *t_new = new table;
-    t_new->n = 0;
-    for (int i = 0; i < N; i++)
-        t_new->el[i] = new element;
-
-    inorder(root, t_old, t_new);
-    free_tree(root);
-    return t_new;
 }

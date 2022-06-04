@@ -50,10 +50,10 @@ int main()
       t->el[index_in_table]->price = price;
   }
 
-  table *t_sorted = sort_table(t);
+  heapSort(t, t->n);
 
   for (int i = 0; i < t->n; i++)
-    cout << t_sorted->el[i]->id << " " << t_sorted->el[i]->name << " " << t_sorted->el[i]->amount << " " << t_sorted->el[i]->price << endl;
+    cout << t->el[i]->id << " " << t->el[i]->name << " " << t->el[i]->amount << " " << t->el[i]->price << endl;
 
   return 0;
 }
