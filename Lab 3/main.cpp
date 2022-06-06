@@ -4,27 +4,38 @@
 #include <cstddef>
 
 using namespace std;
+
+ifstream fin;
 typedef struct tnode
 {
-  int elem;
+  char elem;
   struct tnode *left;
   struct tnode *right;
 } tnode;
 
-struct tnode *addnode(int x, tnode *tree)
+tnode *build_tree()
 {
-  if (tree == NULL)
+  char sym;
+  tnode *d;
+  fin >> sym;
+  switch (sym)
   {
-    tree = new tnode;
-    tree->elem = x;
-    tree->left = NULL;
-    tree->right = NULL;
+  case '(':
+  {
+    d = new tnode;
+    fin >> sym;
+    d->elem = sym;
+    d->left = build_tree();
+    d->right = build_tree();
+    fin >> sym;
+    return d;
   }
-  else if (x < tree->elem)
-    tree->left = addnode(x, tree->left);
-  else
-    tree->right = addnode(x, tree->right);
-  return (tree);
+  case '0':
+    return NULL;
+  case ',':
+    d = build_tree();
+    return d;
+  }
 }
 
 void path_length(tnode *tree, int num, int acc, int &length)
@@ -43,24 +54,14 @@ void path_length(tnode *tree, int num, int acc, int &length)
 
 int main()
 {
-  ifstream fin;
   fin.open("input.txt");
 
   int value;
 
-  tnode *root = new tnode;
-  fin >> value;
-  root->elem = value;
-  root->left = NULL;
-  root->right = NULL;
+  tnode *root = build_tree();
 
-  while (!fin.eof())
-  {
-    fin >> value;
-    addnode(value, root);
-  }
-
-  int x, length = -1;
+  int length = -1;
+  char x;
   cout << "Введите искомое число: ";
   cin >> x;
 
