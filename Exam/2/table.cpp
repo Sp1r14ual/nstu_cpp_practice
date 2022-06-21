@@ -11,6 +11,7 @@ typedef struct elem
     int number;
     double start_time;
     double finish_time;
+    double total_time;
 
 } element;
 
@@ -25,7 +26,7 @@ bool ordered_insert(table *G, element *x)
     int i = G->n - 1;
     if (G->n < N)
     {
-        while (i >= 0 && G->el[i]->finish_time > x->finish_time)
+        while (i >= 0 && G->el[i]->total_time > x->total_time)
         {
             G->el[i + 1] = G->el[i];
             i--;
@@ -63,6 +64,7 @@ int main()
     {
         element *athlete = new element;
         fin >> athlete->number >> athlete->start_time >> athlete->finish_time;
+        athlete->total_time = athlete->finish_time - athlete->start_time;
 
         bool inTable = in_table(t, athlete->number);
         if (inTable)
